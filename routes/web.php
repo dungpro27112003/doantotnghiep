@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\HangController;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use App\Http\Controllers\Admin\Users\LoginController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\UploadController;
 
 
@@ -43,6 +45,27 @@ Route::middleware(['auth'])->group(function(){
             Route::post('add',[ProductController::class,'store']);
             Route::get('list',[ProductController::class,'index']);
             Route::get('edit/{product}',[ProductController::class,'show']);
+            Route::post('edit/{product}',[ProductController::class,'update']);
+            Route::DELETE('destroy',[ProductController::class,'destroy']);
+        });
+
+        Route::prefix('sliders')->group(function(){
+            Route::get('add',[SliderController::class,'create']);
+            Route::post('add',[SliderController::class,'store']);
+            Route::get('list',[SliderController::class,'index']);
+            Route::get('edit/{slider}',[SliderController::class,'show']);
+            Route::post('edit/{slider}',[SliderController::class,'update']);
+            Route::DELETE('destroy',[SliderController::class,'destroy']);
+        });
+
+        Route::prefix('hang')->group(function(){
+            Route::get('add',[HangController::class,'create']);
+            Route::post('add',[HangController::class,'store']);
+            Route::get('list',[HangController::class,'index']);
+            Route::get('edit/{hang}',[HangController::class,'show']);
+            //->name('showedit');
+            Route::post('edit/{hang}',[HangController::class,'update']);
+            Route::DELETE('destroy',[HangController::class,'destroy']);
         });
 
         #Upload
@@ -53,3 +76,5 @@ Route::middleware(['auth'])->group(function(){
 });
 
 Route::get('/',[MainController::class,'index']);
+
+Route::post('/services/load-product',[MainController::class,'loadProduct']);

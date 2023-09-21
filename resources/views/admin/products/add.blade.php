@@ -31,7 +31,14 @@
                     </div>
                 </div>
             </div>
-
+            <div class="form-group">
+                <label>Danh mục</label>
+                <select name="hang_id" class="form-control">
+                    @foreach ($hang as $h)
+                        <option value="{{ $h->id }}">{{ $h->tenhang }}</option>
+                    @endforeach
+                </select>
+            </div>
 
             <div class="form-group">
                 <label>Mô tả</label>

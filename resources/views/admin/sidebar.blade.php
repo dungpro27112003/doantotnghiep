@@ -63,13 +63,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="add" class="nav-link">
+                            <a href="/admin/menus/add" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Thêm danh mục</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="list" class="nav-link">
+                            <a href="/admin/menus/list" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Danh sách danh mục</p>
                             </a>
@@ -92,15 +92,63 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="add" class="nav-link">
+                            <a href="/admin/products/add" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Thêm Sản phẩm</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="list" class="nav-link">
+                            <a href="/admin/products/list" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Danh sách sản phẩm</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fa-regular fa-image"></i>
+                        <p>
+                            Slider
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/sliders/add" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Thêm Slider</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/sliders/list" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách Slider</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fa-regular fa-image"></i>
+                        <p>
+                            Hãng
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/admin/hang/add" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Thêm Hãng</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/hang/list" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách Hãng</p>
                             </a>
                         </li>
                     </ul>

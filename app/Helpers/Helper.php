@@ -1,6 +1,11 @@
 <?php
 
+
+
 namespace App\Helpers;
+
+
+use Illuminate\Support\Str;
 
 class Helper
 {
@@ -33,5 +38,44 @@ class Helper
 
     public static function active($active=0){
         return $active == 0 ? '<span class="btn btn-danger btn-xs">Chưa kích hoạt</span>':'<span class="btn btn-success btn-xs">Đã kích hoạt</span>';
+    }
+
+    public static function menus($menus,$parent_id=0):string{
+        $html = '';
+        foreach($menus as $key => $menu){
+            if($menu->parent_id == $parent_id){
+                $html .= '
+                    <li>
+                        <a href="/danh-muc/'.$menu->id.'-'. Str::slug($menu->name,'-').'.html">
+                            '.$menu->name.'
+                        </a>';
+
+            unset($menu[$key]);
+                       
+            if(self::isChild($menus,$menu->id)){
+                $html .='<ul class="sub-menu">';
+                $html .= self::menus($menus,$menu->id);
+                $html .= '</ul>';
+            }
+                $html .='</li>
+                ';
+            }
+        }
+        return $html;
+    }
+    
+    public static function isChild($menus,$id):bool{
+        foreach($menus as $menu){
+            if($menu->parent_id == $id){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static function price($price=0,$pricesale=0)
+    {
+        if($pricesale !=0) return number_format($pricesale);
+        if($price !=0) return number_format($price);
+        return '<a href="/lien-he.html">Liên hệ</a>';
     }
 }

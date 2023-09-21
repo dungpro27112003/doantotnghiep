@@ -13,6 +13,7 @@ class Product extends Model
         'description',
         'content',
         'menu_id',
+        'hang_id',
         'price',
         'price_sale',
         'active',
@@ -21,5 +22,8 @@ class Product extends Model
 
     public function menu(){
         return $this->hasOne(Menu::class,'id','menu_id');
+    }
+    public function hang(){
+        return $this->hasOne(Hang::class,'id','hang_id');
     }
 }

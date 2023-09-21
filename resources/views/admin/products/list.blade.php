@@ -7,6 +7,7 @@
                 <th style="width: 50px">ID</th>
                 <th>Tên sản phẩm</th>
                 <th>Danh mục</th>
+                <th>Hãng</th>
                 <th>Giá gốc</th>
                 <th>Giá khuyến mãi</th>
                 <th>Update</th>
@@ -25,6 +26,13 @@
                         Không có danh nằm trong danh mục
                     @endif
                 </td>
+                <td>
+                    @if ($product->hang)
+                        {{$product->hang->tenhang}}
+                    @else
+                        Không có danh nằm trong danh mục
+                    @endif
+                </td>
                 <td>{{$product->price}}</td>
                 <td>{{$product->price_sale}}</td>
                 <td>{!! \App\Helpers\Helper::active($product->active) !!}</td>
@@ -38,7 +46,11 @@
             @endforeach
         </tbody>
     </table>
-    {!! $products->links() !!}
+
+    <div class="card-footer clearfix">
+        {!! $products->links() !!}
+
+    </div>
 @endsection
 
 

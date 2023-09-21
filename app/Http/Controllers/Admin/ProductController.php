@@ -42,7 +42,7 @@ class ProductController extends Controller
         return view('admin.products.add',[
             'title' =>'Thêm sản phẩm mới',
             'menus'=>$this->productService->getMenu(),
-            'menu'=>$this->menuService->getParent(),
+            'hang'=>$this->productService->getHang(),
         ]);
     }
 
@@ -70,6 +70,7 @@ class ProductController extends Controller
             'title'=>'Chỉnh sửa sản phẩm',
             'product'=>$product,
             'menus'=>$this->productService->getMenu(),
+            'hang'=>$this->productService->getHang(),
         ]);
     }
 
@@ -91,9 +92,13 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        $result=$this->productService->update($request,$product);
+        if($result){
+            return redirect('admin/products/list');
+        }
+        return redirect()->back();
     }
 
     /**
@@ -102,8 +107,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $result = $this->productService->delete($request);
+        if($result){
+            return response()->json([
+                'error'=>false,
+                'message'=>'Xoá thành công sản phẩm',
+            ]);
+        }
+        return response()->json(['error'=>true]);
     }
 }

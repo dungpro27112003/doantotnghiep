@@ -1,8 +1,8 @@
-<title>Home</title>
+<title>{{$title}}</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-<link rel="icon" type="image/png" href="/template/images/icons/favicon.png"/>
+<!--===============================================================================================-->
+<link rel="icon" type="image/png" href="/template/images/icons/IconWeb.png" />
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
@@ -13,13 +13,13 @@
 <link rel="stylesheet" type="text/css" href="/template/fonts/linearicons-v1.0.0/icon-font.min.css">
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/vendor/animate/animate.css">
-<!--===============================================================================================-->	
+<!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/vendor/css-hamburgers/hamburgers.min.css">
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/vendor/animsition/css/animsition.min.css">
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
+<!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/vendor/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/vendor/slick/slick.css">
@@ -30,4 +30,11 @@
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/css/util.css">
 <link rel="stylesheet" type="text/css" href="/template/css/main.css">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<!--============================================boostrap===================================================-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+</script>
 <!--===============================================================================================-->

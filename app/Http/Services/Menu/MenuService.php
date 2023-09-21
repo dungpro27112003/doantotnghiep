@@ -7,21 +7,29 @@ use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 
+
 class MenuService
 {
     public function getParent(){
-        return Menu::where('parent_id',0)->get();
+        return Menu::where('id',0)->get();
     }
 
     public function getAll(){
         return Menu::orderbyDesc('id')->paginate(20);
     }
 
+    public function show(){
+        return Menu::select('name','id')
+        //->where('parent_id',0)
+        ->orderbyDesc('id')
+        ->get();
+    }
+
     public function create($request){
         try{
             Menu::create([
                 'name' =>(string)$request->input('name'),
-                'parent_id' =>(int)$request->input('parent_id'),
+                // 'parent_id' =>(int)$request->input('parent_id'),
                 'description' =>(string)$request->input('description'),
                 'content' =>(string)$request->input('content'),
                 'active' =>(string)$request->input('active'),

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->longText('content');
             $table->integer('menu_id');
+            $table->integer('hang_id');
             $table->integer('price')->nullable();
             $table->integer('price_sale')->nullable();
             $table->integer('active');

@@ -2,14 +2,20 @@
 
 namespace App\Http\Services\Products;
 
+use App\Models\Hang;
 use App\Models\Menu;
 use App\Models\Product;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class ProductService{
     public function getMenu(){
         return Menu::where('active',1)->get();
+    }
+
+    public function getHang(){
+        return Hang::get();
     }
 
     protected function isValidPrice($request){
@@ -44,6 +50,34 @@ class ProductService{
     }
 
     public function get(){
-        return Product::with('menu')->orderByDesc('id')->paginate(15);
+        return Product::with('menu')->orderByDesc('id')->paginate(10);
+    }
+    
+    public function update($request,$product){
+        $isValidPrice = $this->isValidPrice($request);
+        if($isValidPrice===false){
+            return false;
+        }
+
+        try{
+            $product->fill($request->input());
+            $product->save();
+            Session::flash('success','Cập nhật thành công');
+        }catch(Exception $err){
+            Session::flash('errror','Có lỗi vui lòng thử lại');
+            Log::info($err->getMessage());
+            return false;
+        }
+        return true;
+        
+    }
+
+    public function delete($request){
+        $product = Product::where('id',$request->input('id'))->first();
+        if($product){
+            $product->delete();
+            return true;
+        }
+        return false;
     }
 }

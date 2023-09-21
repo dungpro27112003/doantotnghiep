@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-sm-6 col-lg-3 p-b-50">
                 <h4 class="stext-301 cl0 p-b-30">
-                    Categories
+                    Thể loại
                 </h4>
 
                 <ul>
@@ -35,7 +35,7 @@
 
             <div class="col-sm-6 col-lg-3 p-b-50">
                 <h4 class="stext-301 cl0 p-b-30">
-                    Help
+                    Hỗ trợ
                 </h4>
 
                 <ul>
@@ -67,7 +67,7 @@
 
             <div class="col-sm-6 col-lg-3 p-b-50">
                 <h4 class="stext-301 cl0 p-b-30">
-                    GET IN TOUCH
+                    Liên hệ
                 </h4>
 
                 <p class="stext-107 cl7 size-201">
@@ -91,7 +91,7 @@
 
             <div class="col-sm-6 col-lg-3 p-b-50">
                 <h4 class="stext-301 cl0 p-b-30">
-                    Newsletter
+                    Bản tin
                 </h4>
 
                 <form>
@@ -405,3 +405,4 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 </script>
 <!--===============================================================================================-->
 <script src="/template/js/main.js"></script>
+<script src="/template/js/public.js"></script>
