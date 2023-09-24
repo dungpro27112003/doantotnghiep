@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layout.head')
 </head>
 
@@ -587,18 +588,21 @@
                     </div>
                 </div>
             </div>
-            <div class="row isotope-grid">
+            <div id="loadProducts">
                 @include('products.list')
             </div>
             <!-- Load more -->
-            <div class="flex-c-m flex-w w-full p-t-45">
-                <input type="hidden" value="1" id="page">
-                <a href="#" onclick="loadMore()"
-                    class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-                    Load More
-                </a>
-
-            </div>
+            {{-- <form method="POST" action="/services/load-product"></form> --}}
+                <div class="flex-c-m flex-w w-full p-t-45" id="btn-loadmore">
+                    <input type="hidden" value="1" id="page">
+                    <a onclick="loadMore()"
+                        class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+                        Load More
+                    </a>
+                    {{-- <button class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04" type="submit">Load More</button> --}}
+                    {{-- @csrf --}}
+                </div>
+            
         </div>
     </section>
 
