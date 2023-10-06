@@ -74,8 +74,8 @@ class Helper
     }
     public static function price($price=0,$pricesale=0)
     {
-        if($pricesale !=0) return number_format($pricesale);
-        if($price !=0) return number_format($price);
+        if($price !=0) return number_format($price).'đ';
+        if($pricesale !=0) return number_format($pricesale).'đ';    
         return '<a href="/lien-he.html">Liên hệ</a>';
     }
 }

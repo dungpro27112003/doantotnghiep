@@ -64,4 +64,35 @@ class MenuService
         Session::flash('success','Cập nhật thành công');
         return true;
     }
+
+    public function getID($id){
+        return Menu::where('id',$id)->where('active',1)->firstOrFail();
+    }
+    
+    public function getProduct($menu,$request){
+        $query = $menu->products()
+        ->select('id','name','price','price_sale','thumb')
+        ->where('active',1);
+        
+        $searchKeyword = $request->input('search');
+
+        if($request->input('price')=='asc'||$request->input('price')=='desc'){
+            $query->orderBy('price',$request->input('price'));
+        }elseif($request->input('price')=='0-5000000'){
+            $query->whereBetween('price',[0,5000000]);
+        }elseif($request->input('price')=='5000000-10000000'){
+            $query->whereBetween('price',[5000000,10000000]);
+        }elseif($request->input('price')=='10000000-up'){
+            $query->where('price','>=','10000000')
+            ->orderBy('price','asc');
+        }
+
+        // Xử lý tìm kiếm sản phẩm dựa trên $searchKeyword
+        if (!empty($searchKeyword)) {
+            $query->where('name', 'like', '%' . $searchKeyword . '%');
+        }
+
+        return $query->orderByDesc('id')->paginate(8)->withQueryString();
+    }
+
 }
