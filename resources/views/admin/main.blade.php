@@ -15,15 +15,17 @@
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="../../index3.html" class="nav-link">Home</a>
+                    <a href="{{ route('indexAdmin') }}" class="nav-link">Trang chủ Admin</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
+                    @if (!empty(session('user')))
+                        <a href="{{ route('logoutAdmin') }}" class="nav-link">Đăng xuất</a>
+                    @endif
                 </li>
             </ul>
 
             <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
+            {{-- <ul class="navbar-nav ml-auto">
                 <!-- Navbar Search -->
                 <li class="nav-item">
                     <a class="nav-link" data-widget="navbar-search" href="#" role="button">
@@ -147,7 +149,7 @@
                         <i class="fas fa-th-large"></i>
                     </a>
                 </li>
-            </ul>
+            </ul> --}}
         </nav>
         <!-- /.navbar -->
 
@@ -168,7 +170,7 @@
                             <!-- jquery validation -->
                             <div class="card card-primary mt-3">
                                 <div class="card-header">
-                                    <h3 class="card-title">{{ $title }}</h3>
+                                    <h3 class="card-title"> {{ $title }}</h3>
                                 </div>
                                 
                                 @yield('content')
@@ -354,8 +356,33 @@
     </div>
     <!-- ./wrapper -->
     @include('admin.footer')
-
-
+    <script>
+        $('.btn_delete').on('click',function(event){
+        event.preventDefault();
+        var id = $(this).data('id');
+        if(confirm('Bạn có muốn xoá sản phẩm này vĩnh viễn không?')){
+            $.ajax({
+                type:'DELETE',
+                datatype:'JSON',
+                data:{
+                    _token:"{{ csrf_token() }}",
+                    id:id,
+                },
+                url:"{{ route('deleteMenu') }}",
+                success:function(result){
+                    if(result.error ===false){
+                        location.reload();
+                    }else{
+                        alert('Đã xảy ra vấn đề lỗi xin vui lòng thử lại');
+                    }
+                }
+            })
+        }
+    })
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>  
+    @yield('js')
 </body>
 
 </html>

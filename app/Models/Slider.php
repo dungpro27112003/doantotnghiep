@@ -9,11 +9,14 @@ class Slider extends Model
 {
     use HasFactory;
 
+    protected $table = 'sliders';
     protected $fillable =[
         'name',
-        'url',
         'thumb',
-        'sort_by',
         'active',
+        'product_id',
     ];
+    public function product(){
+        return $this->belongsTo(Product::class,'product_id');
+    }
 }

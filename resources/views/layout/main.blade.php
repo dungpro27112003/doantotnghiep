@@ -7,13 +7,10 @@
 </head>
 
 <body><!-- class="animsition" -->
-
     <!-- Header -->
     @include('layout.header')
-
     <!-- Cart -->
     @include('layout.cart')
-
     <!-- Slider -->
     <section class="section-slide">
         <div class="wrap-slick1">
@@ -24,7 +21,7 @@
                             <div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
                                 <div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
                                     <span class="ltext-101 cl2 respon2">
-                                        Sản Phẩm Hot
+                                        Sản Phẩm
                                     </span>
                                 </div>
 
@@ -36,9 +33,9 @@
                                 </div>
 
                                 <div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
-                                    <a href="{{ $slider->url }}"
+                                    <a href="{{ route('productDetail',[$slider->product->id ,Str::slug($slider->product->name, '-')]) }}"
                                         class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-                                        Shop Now
+                                        Xem ngay
                                     </a>
                                 </div>
                             </div>
@@ -119,7 +116,10 @@
                     <div class="col-md-6 col-xl-3 p-b-30 m-lr-auto">
                         <!-- Block1 -->
                         <div class="block1 wrap-pic-w">
-                            <img src="/template/images/Dienthoai.png" style="height: 200px;width:200px;"
+                            <img style="
+                            height: 200px;
+                            object-fit: contain;" src="{{ asset($menu->menu_image) }}" style="height: 200px;width:200px;"
+
                                 alt="IMG-BANNER">
 
                             <a href="/danh-muc/{{ $menu->id }}-{{ Str::slug($menu->name, '-') }}.html"
@@ -128,7 +128,6 @@
                                     <span class="block1-name ltext-102 trans-04 p-b-8">
                                         {{ $menu->name }}
                                     </span>
-
                                     <span class="block1-info stext-102 trans-04">
                                         2023
                                     </span>
@@ -330,40 +329,28 @@
 
 
     <!-- Product -->
+    <br>
+    <br>
+
     <section class="bg0 p-t-23 p-b-140">
         <div class="container">
             <div class="p-b-10">
                 <h3 class="ltext-103 cl5">
-                    Product Overview
+                    Tổng quan sản phẩm
                 </h3>
             </div>
 
             {{-- Control danh mục         --}}
-            <div class="flex-w flex-sb-m p-b-52">
+            {{-- <div class="flex-w flex-sb-m p-b-52">
                 <div class="flex-w flex-l-m filter-tope-group m-tb-10">
-                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
+                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*" onclick="btn_fillterProduct(0)">
                         All Products
                     </button>
-
-                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-                        Women
-                    </button>
-
-                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-                        Men
-                    </button>
-
-                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-                        Bag
-                    </button>
-
-                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-                        Shoes
-                    </button>
-
-                    <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-                        Watches
-                    </button>
+                    @foreach ($menus as $item)
+                        <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" onclick="btn_fillterProduct({{ $item->id }})">
+                            {{ $item->name }}
+                        </button>
+                    @endforeach
                 </div>
 
                 <div class="flex-w flex-c-m m-tb-10">
@@ -586,29 +573,31 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
+            {{-- @if (!empty($productFilter)){
+
+            } --}}
             <div id="loadProducts">
                 @include('products.list')
             </div>
             <!-- Load more -->
             {{-- <form method="POST" action="/services/load-product"></form> --}}
-                <div class="flex-c-m flex-w w-full p-t-45" id="btn-loadmore">
-                    <input type="hidden" value="1" id="page">
-                    <a onclick="loadMore()"
-                        class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-                        Load More
-                    </a>
-                    {{-- <button class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04" type="submit">Load More</button> --}}
-                    {{-- @csrf --}}
-                </div>
-            
+            <div class="flex-c-m flex-w w-full p-t-45" id="btn-loadmore">
+                <input type="hidden" value="1" id="page">
+                <a onclick="loadMore()"
+                    class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+                    Xem Thêm
+                </a>
+                {{-- <button class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04" type="submit">Load More</button> --}}
+                {{-- @csrf --}}
+            </div>
         </div>
     </section>
-        
+    
 
     <!-- Footer -->
     @include('layout.footer')
-
+    @yield('js')
 </body>
 
 </html>

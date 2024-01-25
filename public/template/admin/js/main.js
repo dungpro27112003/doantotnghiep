@@ -9,7 +9,10 @@ function removeRow(id,url){
         $.ajax({
             type:'DELETE',
             datatype:'JSON',
-            data:{id},
+            data:id,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             url:url,
             success:function(result){
                 if(result.error ===false){
@@ -31,10 +34,13 @@ $('#upload').change(function(){
     $.ajax({
         processData:false,
         contentType:false,
+        url:'/admin/upload/services',
         type:'POST',
         dataType:'JSON',
         data:form,
-        url:'/admin/upload/services',
+         headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         success:function(results){
             if(results.error===false){
                 $('#image_show').html('<a href="'+results.url+'" target="_blank">'+

@@ -8,8 +8,8 @@
                 <th>Tên sản phẩm</th>
                 <th>Danh mục</th>
                 <th>Hãng</th>
+                <th>Số lượng</th>
                 <th>Giá gốc</th>
-                <th>Giá khuyến mãi</th>
                 <th>Update</th>
                 <th>&nbsp;</th>
             </tr>
@@ -33,14 +33,14 @@
                         Không có danh nằm trong danh mục
                     @endif
                 </td>
+                <td>{{$product->product_quantity}}</td>
                 <td>{{$product->price}}</td>
-                <td>{{$product->price_sale}}</td>
                 <td>{!! \App\Helpers\Helper::active($product->active) !!}</td>
                 <td>{{$product->updated_at}}</td>
                 <td>&nbsp;</td>
                 <td>
                     <a class="btn btn-primary btn-sm" href="/admin/products/edit/{{$product->id}}"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="#" class="btn btn-danger btn-sm" onclick="removeRow({{$product->id}},'/admin/products/destroy')"><i class="fa-solid fa-xmark"></i></a>
+                    <a href="#" class="btn btn-danger btn-sm" onclick="removeRow({{$product->id}},'/admin/products/destroy'); return false;"><i class="fa-solid fa-xmark"></i></a>
                 </td>
             </tr>
             @endforeach

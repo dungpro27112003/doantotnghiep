@@ -1,7 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ $title }}</title>
-
 <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
 
@@ -13,13 +12,14 @@
 <script defer="" referrerpolicy="origin"
     src="/cdn-cgi/zaraz/s.js?z=JTdCJTIyZXhlY3V0ZWQlMjIlM0ElNUIlNUQlMkMlMjJ0JTIyJTNBJTIyQWRtaW5MVEUlMjAzJTIwJTdDJTIwTG9nJTIwaW4lMjIlMkMlMjJ4JTIyJTNBMC45ODY3NDMyODg4NjQyMTQ3JTJDJTIydyUyMiUzQTE5MjAlMkMlMjJoJTIyJTNBMTA4MCUyQyUyMmolMjIlM0E5NjMlMkMlMjJlJTIyJTNBMTkyMCUyQyUyMmwlMjIlM0ElMjJodHRwcyUzQSUyRiUyRmFkbWlubHRlLmlvJTJGdGhlbWVzJTJGdjMlMkZwYWdlcyUyRmV4YW1wbGVzJTJGbG9naW4uaHRtbCUyMiUyQyUyMnIlMjIlM0ElMjJodHRwcyUzQSUyRiUyRnd3dy5nb29nbGUuY29tJTJGJTIyJTJDJTIyayUyMiUzQTI0JTJDJTIybiUyMiUzQSUyMlVURi04JTIyJTJDJTIybyUyMiUzQS00MjAlMkMlMjJxJTIyJTNBJTVCJTVEJTdE">
 </script>
-<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="csrf-token" class="csrf-token" content="{{ csrf_token() }}">
+{{-- <input type="hidden" name="" class="csrf_token" value="{{ toke }}"> --}}
 <style >
     .hidden{
         display: none;
     }
 </style>
-@yield('head')
+{{-- @yield('head') --}}
 <script nonce="fa23df80-f7bd-4e9e-b88e-260b43167161">
     (function(w, d) {
         ! function(U, V, W, X) {
@@ -85,3 +85,4 @@
         }(w, d, "zarazData", "script");
     })(window, document);
 </script>
+  

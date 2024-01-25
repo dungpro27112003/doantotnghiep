@@ -6,7 +6,6 @@
             <tr>
                 <th style="width: 50px">ID</th>
                 <th>Tiêu đề</th>
-                <th>Link</th>
                 <th>Ảnh</th>
                 <th>Trạng thái</th>
                 <th>Cập nhật</th>
@@ -18,7 +17,6 @@
             <tr>
                 <td>{{$slider->id}}</td>
                 <td>{{$slider->name}}</td>
-                <td>{{$slider->url}}</td>
                 <td>
                     <a href="{{$slider->thumb}}" target="_blank">
                         <img src="{{$slider->thumb}}" height="40px"/>

@@ -3,6 +3,12 @@
     <script src="/ckeditor/ckeditor.js"></script>
 @endsection
 @section('content')
+    @if (!empty(session('errror')))
+        <div class="alert alert-danger">{{ session('errror') }}</div>
+    @endif
+    @if (!empty(session('success')))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
     <form action="" method="post" enctype="multipart/form-data">
         <div class="card-body">
             <div class="row">
@@ -25,10 +31,6 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="">Giá giảm</label>
-                        <input type="number" value="{{$product->price_sale}}" name="price_sale" class="form-control" >
-                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -39,14 +41,13 @@
                     @endforeach
                 </select>
             </div>
-
             <div class="form-group">
-                <label>Mô tả</label>
-                <textarea name="description" class="form-control">{{$product->description}}</textarea>
+                <label for="quantity">Số lượng</label>
+                <input type="number" name="quantity" value="{{$product->product_quantity}}" class="form-control" >
             </div>
 
             <div class="form-group">
-                <label>Mô tả chi tiết</label>
+                <label>Mô tả</label>
                 <textarea name="content" id="content" class="form-control">{{$product->content}}</textarea>
             </div>
 

@@ -24,7 +24,6 @@ class MenuController extends Controller
     }
     public function store(CreateFormRequest $request){
         $this->menuService->create($request);
-
         return redirect()->back();
     }
 
@@ -37,15 +36,24 @@ class MenuController extends Controller
     
     public function show(Menu $menu){
         return view('admin.menu.edit',[
-            'title'=>'Chỉnh sửa danh mục'.$menu->name,
+            'title'=>'Chỉnh sửa danh mục '.$menu->name,
             'menu'=>$menu,
             'menus' =>$this->menuService->getParent(),
         ]);
     }
     
-    public function update(Menu $menu, CreateFormRequest $request){
-        $this->menuService->update($menu,$request);
-        return redirect('admin/menus/list');
+    public function update($menu,CreateFormRequest $request){
+        $check = $this->menuService->update($menu,$request);
+       
+        // dd($check);
+        if ($check) {
+            # code...
+            // return redirect()->route('listMenu')->with('success','Cập nhật thành công');
+            return back()->with('success','Cập nhật thành công');
+        }else{
+            return back();
+        } 
+        
     }
 
     public function destroy(Request $request){

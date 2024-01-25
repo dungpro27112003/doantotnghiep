@@ -4,8 +4,12 @@ namespace App\Http\Services;
 
 use App\Jobs\SendMail;
 use App\Models\Cart;
+use App\Models\CouponModel;
 use App\Models\Customer;
+use App\Models\OrderModel;
+use App\Models\PriceDiscountModel;
 use App\Models\Product;
+use App\Models\UserCustomerModel;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +17,10 @@ use Illuminate\Support\Facades\Session;
 
 class CartService
 {
-    public function create($request)
+    public function create($id , $quantity)
     {
-        $qty = (int)$request->input('num-product');
-        $product_id = (int)$request->input('product_id');
+        $qty = $quantity;
+        $product_id = $id;
 
         if ($qty <= 0 || $product_id <= 0) {
             Session::flash('error', 'Số lượng hoặc sản phẩm không chính xác');
@@ -27,9 +31,8 @@ class CartService
 
         if (is_null($carts)) {
             Session::put('carts', [
-                $product_id => $qty
+                $product_id =>  $qty 
             ]);
-
             return true;
         }
 
@@ -57,7 +60,7 @@ class CartService
             return [];
         }
         $productID = array_keys($carts);
-        return Product::select('id', 'name', 'price', 'price_sale', 'thumb')
+        return Product::select('id', 'name', 'price', 'thumb')->with('tbl_price_dicount')
             ->where('active', 1)
             ->whereIn('id', $productID)
             ->get();
@@ -65,56 +68,71 @@ class CartService
 
     public function update($request)
     {
-        $numProducts = $request->input('num-product');
+        
+        
         $carts = Session::get('carts');
-
-        foreach ($numProducts as $key_productId => $quantity) {
+        
+        foreach ($carts as $key => $quantity) {
             if ($quantity == 0) {
-                unset($carts[$key_productId]);
+                unset($carts[$key]);
             } else {
-                $carts[$key_productId] = (int)$quantity;
+                $numProducts = $request->input('num_product_'.$key);
+                $carts[$key] = (int)$numProducts;
             }
         }
         Session::put('carts', $carts);
         return true;
     }
 
-    public function remove($id)
+    public function remove($request)
     {
-        $carts = Session::get('carts');
-        unset($carts[$id]);
-        Session::put('carts', $carts);
+        if(!empty($request->id)){
+            $carts = Session::get('carts');
+            unset($carts[$request->id]);
+            Session::put('carts', $carts);
+        }
         return true;
     }
 
-    public function addCart($request)
+    public function addCart($request,$coupon)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
+                $carts = session()->get('carts');
+                if ($carts == null) {
+                    return false;
+                }
+                $order = new OrderModel();
+                $order->order_name = $request->order_name;
+                $order->order_phone = $request->order_phone;
+                $order->order_address = $request->order_address;
+                $order->order_email = $request->order_email;
+                $order->user_customer_id = $request->user_customer_id;
+                $order->coupon_id = $coupon!=null?$coupon->coupon_id:null;
+                $order->created_at=now();
+                $order->save();
 
-            $carts = Session::get('carts');
+                $slcOrder = OrderModel::orderBy('order_id','DESC')->first();
+                $this->infoProductCart($carts,$slcOrder->order_id );
+                // coupon
+               
+                if(!empty(session('user_customer_id'))){
+                    if(!empty(session('coupon')[session('user_customer_id')])){
+                        $coupon = CouponModel::where('coupon_code',session('coupon')[session('user_customer_id')]['coupon_code'])->update([
+                            'coupon_quantity'=>(int)session('coupon')[session('user_customer_id')]['coupon_quantity']-1,
+                        ]);
+                        session()->forget('coupon');
+                    }
+                }
+                // dd('ok');
 
-            if (is_null($carts)) {
-                return false;
-            }
-            $customer = Customer::create([
-                'name' => $request->input('name'),
-                'phone' => $request->input('phone'),
-                'address' => $request->input('address'),
-                'email' => $request->input('email'),
-                'content' => $request->input('content'),
-            ]);
-
-
-            $this->infoProductCart($carts, $customer->id);
-
-            DB::commit();
-
-            Session::flash('success', 'Đặt hàng thành công');
-
-            SendMail::dispatch($request->input('email'))->delay(now()->addSeconds(2));
-
-            Session::forget('carts');
+                Session::flash('success', 'Đặt hàng thành công');
+                
+                // SendMail::dispatch($request->input('email'))->delay(now()->addSeconds(2));
+                
+                Session::forget('carts');
+                DB::commit();
+                    
         } catch (Exception $err) {
             DB::rollBack();
             Session::flash('error', 'Đặt hàng lỗi vui lòng thử lại');
@@ -123,35 +141,78 @@ class CartService
         return true;
     }
 
-    public function infoProductCart($carts, $customer_id)
+    public function infoProductCart($carts, $order_id)
     {
         $productID = array_keys($carts);
-        $products = Product::select('id', 'name', 'price', 'price_sale', 'thumb')
+        $products = Product::with('tbl_price_dicount')
             ->where('active', 1)
             ->whereIn('id', $productID)
             ->get();
-        $data = [];
-        foreach ($products as $product) {
-            $data[] = [
-                'customer_id' => $customer_id,
-                'product_id' => $product->id,
-                'pty' => $carts[$product->id],
-                'price' => $product->price_sale != 0 ? $product->price_sale : $product->price,
-            ];
-        }
-
-        return Cart::insert($data);
+        $order = OrderModel::with('coupon')->find($order_id);
+       
+            $data = [];
+            $total = 0;
+            foreach ($products as $product) {
+                if($product->product_quantity>0){
+                    $product->update([
+                        'product_quantity'=>$product->product_quantity-$carts[$product->id],
+                    ]);
+                }
+                $price = $product->price ;
+                if(!empty($product->tbl_price_dicount && date("Y/m/d") != str_replace('-','/',$product->tbl_price_dicount->end_at))){
+                    $percent = $product->tbl_price_dicount->percent_price/100;
+                    $discount = $price * $percent;
+                    $result = $price - $discount;
+                    if (session('coupon')!=null ) {
+                        # code...
+                        $priceEnd =  $result * $carts[$product->id]-session('coupon')[session('user_customer_id')]['coupon_discount'];
+                        $total += $priceEnd;
+                        
+                    }else{
+                        $priceEnd = $result * $carts[$product->id];
+                        $total += $priceEnd;
+                    }
+                } else {
+                    if (session('coupon')!=null) {
+                        # code...
+                        $priceEnd = $price * $carts[$product->id]-session('coupon')[session('user_customer_id')]['coupon_discount'];
+                        $total += $priceEnd;
+                    } else{
+                        # code...
+                        $priceEnd = $price * $carts[$product->id];
+                        $total += $priceEnd;
+                    }
+                }
+                // dd($priceEnd);
+                $data[] = [
+                    'order_id' => $order_id,
+                    'product_id' => $product->id,
+                    'pty' => $carts[$product->id],
+                    'price' => $priceEnd,
+                    'coupon_code'=> $order->coupon !=null ? $order->coupon->coupon_code : null,
+                ];
+                
+            }
+            Cart::insert($data);
+            
     }
 
     public function getCustomer()
     {
-        return Customer::orderByDesc('id')->paginate(15);
+        return OrderModel::orderByDesc('order_id')->paginate(15);
     }
 
-    public function getProductForCart($customer)
+    public function getProductForCart($id)
     {
-        return $customer->carts()->with(['product' => function ($query) {
-            $query->select('id', 'name', 'thumb');
-        }])->get();
+        $carts = Cart::with('product')->where('order_id',$id)->get();
+        return $carts;
+        // foreach ($carts as $key => $value) {
+        //     # code...
+        //     return $value;
+        // }
+        
+        // return $order->carts()->with(['product' => function ($query) {
+        //     $query->select('id', 'name', 'thumb');
+        // }])->get();
     }
 }

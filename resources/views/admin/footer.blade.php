@@ -6,4 +6,5 @@
 <script src="/template/admin/js/main.js">
     
 </script>
+<script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 @yield('footer')

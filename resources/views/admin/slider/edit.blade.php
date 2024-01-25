@@ -4,12 +4,12 @@
 @section('content')
     <form action="" method="post" enctype="multipart/form-data">
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="menu">Tiêu đề</label>
-                        <input type="text" name="name" value="{{$sliders->name}}" class="form-control" >
-                    </div>
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="menu">Tiêu đề</label>
+                    <input type="text" name="name" value="{{$sliders->name}}" class="form-control" >
+                </div>
+            {{-- <div class="row">
                     
                 </div>
                 <div class="col-md-6">
@@ -19,7 +19,7 @@
                     </div>
                     
                 </div>
-            </div>
+            </div> --}}
 
             <div class="form-group">
                 <label for="menu">Ảnh sản phẩm</label>
@@ -32,10 +32,6 @@
                 <input type="hidden" name="thumb" id="thumb" value="{{$sliders->thumb}}"/>
             </div>
             
-            <div class="form-group">
-                <label for="menu">Sắp xếp</label>
-                <input type="number" name="sort_by" value="{{$sliders->sort_by}}" class="form-control" >
-            </div>
 
             <div class="form-group">
                 <label>kích hoạt</label>

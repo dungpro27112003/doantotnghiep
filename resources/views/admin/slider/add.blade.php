@@ -3,33 +3,27 @@
 @section('content')
     <form action="" method="post" enctype="multipart/form-data">
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="menu">Tiêu đề</label>
-                        <input type="text" name="name" value="{{old('name')}}" class="form-control" >
-                    </div>
-                    
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="menu">Đường dẫn</label>
-                        <input type="text" name="url" value="{{old('url')}}" class="form-control" >
-                    </div>
-                    
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="menu">Tiêu đề</label>
+                    <input type="text" name="name" value="{{old('name')}}" class="form-control" >
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="menu">Ảnh sản phẩm</label>
+                <label for="menu">Ảnh slide</label>
                 <input type="file"  class="form-control" id="upload">
                 <div id="image_show"></div>
                 <input type="hidden" name="thumb" id="thumb"/>
             </div>
-            
             <div class="form-group">
-                <label for="menu">Sắp xếp</label>
-                <input type="number" name="sort_by" value="1" class="form-control" >
+                <label for="menu">Sản phẩm</label>
+                <select class="form-control" name="slc_product" id="">
+                    <option value="">--- Tất cả sản phẩm ---</option>
+                    @foreach ($product as $item)
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">

@@ -9,7 +9,10 @@ function loadMore() {
     $.ajax({
         type: 'POST',
         dataType: 'JSON',
-        data: { page },
+        data: { 
+            page,
+            _token:$('meta[name="csrf-token"]').attr('content'),
+        },
         url: '/services/load-product',
         success: function (result) {
             if(result.html !== ''){
@@ -18,7 +21,7 @@ function loadMore() {
                 console.log('Current page:', page);
                 console.log('Number of products:', result.length);
             }else{
-                alert('Đã load xong sản phẩm');
+                // alert('Đã load xong sản phẩm');
                 $('#btn-loadmore').css('display','none');
             }
         },

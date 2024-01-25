@@ -12,13 +12,17 @@ class Cart extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'customer_id',
+        'order_id',
         'product_id',
         'pty',
-        'price'
+        'price',
+        'coupon_code'
     ];
 
     public function product(){
-        return $this->hasOne(Product::class,'id','product_id');
+        return $this->belongsTo('App\Models\Product','product_id');
+    }
+    public function tbl_order() {
+        return $this->belongsTo('App\Models\OrderModel','order_id');
     }
 }

@@ -31,6 +31,10 @@
 <!--===============================================================================================-->
 <link rel="stylesheet" type="text/css" href="/template/css/util.css">
 <link rel="stylesheet" type="text/css" href="/template/css/main.css">
+<link rel="stylesheet" type="text/css" href="/template/css/option_user.css">
+
+{{-- <link rel="stylesheet" type="text/css" href="{{ asset('/template/css/user.css') }}"> --}}
+
 
 <!--============================================boostrap===================================================-->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"

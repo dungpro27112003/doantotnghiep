@@ -30,7 +30,14 @@ class CreateFormRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Cần đặt tên danh mục',
+            'required' => ':attribute không được để trống',
+        ];
+
+    }
+    public function attributes()
+    {
+        return [
+            'name'=>'Tên danh mục',
         ];
     }
 }

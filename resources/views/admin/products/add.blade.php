@@ -39,20 +39,19 @@
                     @endforeach
                 </select>
             </div>
-
             <div class="form-group">
-                <label>Mô tả</label>
-                <textarea name="description" class="form-control">{{old('description')}}</textarea>
+                <label for="quantity">Số lượng</label>
+                <input type="number" name="quantity" value="{{old('quantity')}}" class="form-control" >
             </div>
 
             <div class="form-group">
-                <label>Mô tả chi tiết</label>
+                <label>Mô tả</label>
                 <textarea name="content" id="content" class="form-control">{{old('content')}}</textarea>
             </div>
 
             <div class="form-group">
                 <label for="menu">Ảnh sản phẩm</label>
-                <input type="file"  class="form-control" id="upload">
+                <input type="file"  class="form-control" id="upload" >
                 <div id="image_show"></div>
                 <input type="hidden" name="thumb" id="thumb"/>
             </div>

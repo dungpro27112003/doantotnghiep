@@ -47,38 +47,20 @@
                             <div class="wrap-slick3-dots"></div>
                             <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
                             <div class="slick3 gallery-lb">
-                                <div class="item-slick3" data-thumb="{{ $product->thumb }}">
-                                    <div class="wrap-pic-w pos-relative">
-                                        <img src="{{ $product->thumb }}" alt="IMG-PRODUCT">
+                                @foreach ($product->tbl_image_product as $item)
+                                    <div class="item-slick3" data-thumb="{{ $item->image_link }}">
+                                        <div class="wrap-pic-w pos-relative">
+                                            <img src="{{ $item->image_link }}" alt="IMG-PRODUCT">
 
-                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                            href="{{ $product->thumb }}">
-                                            <i class="fa fa-expand"></i>
-                                        </a>
+                                            <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
+                                                href="{{ $item->image_link }}">
+                                                <i class="fa fa-expand"></i>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+                                    
+                                @endforeach
 
-                                <div class="item-slick3" data-thumb="images/product-detail-02.jpg">
-                                    <div class="wrap-pic-w pos-relative">
-                                        <img src="images/product-detail-02.jpg" alt="IMG-PRODUCT">
-
-                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                            href="images/product-detail-02.jpg">
-                                            <i class="fa fa-expand"></i>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="item-slick3" data-thumb="images/product-detail-03.jpg">
-                                    <div class="wrap-pic-w pos-relative">
-                                        <img src="images/product-detail-03.jpg" alt="IMG-PRODUCT">
-
-                                        <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                            href="images/product-detail-03.jpg">
-                                            <i class="fa fa-expand"></i>
-                                        </a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -86,12 +68,45 @@
 
                 <div class="col-md-6 col-lg-5 p-b-30">
                     <div class="p-r-50 p-t-5 p-lr-0-lg">
-                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">
-                            {{ $product->name }}
-                        </h4>
-
+                        Sản phẩm
+                        <h3 class="mtext-105 cl2 js-name-detail p-b-14">
+                            <b> {{ $product->name }}</b>
+                        </h3>
+                        <p>
+                            <i class="fa-solid fa-box"></i>
+                            Tình trạng: 
+                            @if ($product->product_quantity > 0)
+                                <span style="color: #83b474">Còn hàng ({{ $product->product_quantity }})</span>
+                            @else
+                                <span style="color: red">Hết hàng({{ $product->product_quantity }})</span>
+                            @endif
+                        </p>
+                        @if (!empty($pricediscount) && date("Y/m/d") != str_replace('-','/',$pricediscount->end_at))
+                            <p>
+                                <i class="fa-solid fa-calendar-days"></i>
+                                Ngày hết khuyến mãi: 
+                                    <span style="color: #83b474">{{ str_replace('-','/',$pricediscount->end_at) }}</span>
+                            </p>
+                        @endif
                         <span class="mtext-106 cl2">
-                            {!! App\Helpers\Helper::price($product->price, $product->price_sale) !!}
+                            @if (!empty($pricediscount) && date("Y/m/d") != str_replace('-','/',$pricediscount->end_at))
+                                @php
+                                    $price = $product->price;
+                                    $percent = $pricediscount->percent_price/100;
+                                    $discount = $price * $percent;
+                                    $total = $price - $discount;
+                                @endphp
+                                <h4 style="font-weight: 600">{{ number_format($total)}}đ</h4>
+                                <div style="display: flex; align-items: center;">
+                                    <h6 style=" font-size:17px;font-weight: 600; text-decoration-line: line-through; color: #9ca3af;">{{ number_format($product->price) }}đ</h6>
+                                    <small style="font-size:14px; font-weight: 600; margin-left: 5px; background-color: #dc3545; border-radius: 7px ;color: white;
+                                    padding: 4px;">
+                                        -{{ $pricediscount->percent_price }}%
+                                    </small>
+                                </div>
+                            @else
+                                <h4 style="font-weight: 600">{!! App\Helpers\Helper::price($product->price) !!}đ</h4>
+                            @endif
                         </span>
 
                         <!--  -->
@@ -115,7 +130,7 @@
 								</div>
 							</div> --}}
                             @if ($product->price !== null)
-                                <div class="flex-w flex-r-m p-b-10">
+                                {{-- <div class="flex-w flex-r-m p-b-10">
                                     <div class="size-203 flex-c-m respon6">
                                         Color
                                     </div>
@@ -132,33 +147,47 @@
                                             <div class="dropDownSelect2"></div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="flex-w flex-r-m p-b-10">
                                     <div class="size-204 flex-w flex-m respon6-next">
-                                        <form action="/add-cart" method="POST">
-
-                                            <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+                                        {{-- <input type="hidden" name="product_id" value="{{ $product->id }}" /> --}}
+                                        @if ($product->product_quantity == 0)
+                                            <div class="wrap-num-product flex-w m-r-20 m-tb-10" style="display:none">
                                                 <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
                                                     <i class="fs-16 zmdi zmdi-minus"></i>
                                                 </div>
-
                                                 <input class="mtext-104 cl3 txt-center num-product" type="number"
-                                                    name="num-product" value="1">
-
+                                                    name="num-product" min="1" value="1">
                                                 <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                                                     <i class="fs-16 zmdi zmdi-plus"></i>
                                                 </div>
                                             </div>
-
-                                            <button type="submit"
-                                                class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-                                                Add to cart
-                                            </button>
-                                            <input type="hidden" name="product_id" value="{{ $product->id }}" />
-                                            @csrf
-
-                                        </form>
+                                                <button type="button" style="display: none" disabled             
+                                                    class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04"
+                                                    onclick="return clickAddCart({{ $product->id }},{{ $product->product_quantity }})"
+                                                    >
+                                                    Thêm sản phẩm 
+                                                </button>
+                                            @else
+                                                <div class="wrap-num-product flex-w m-r-20 m-tb-10" >
+                                                    <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                                        <i class="fs-16 zmdi zmdi-minus"></i>
+                                                    </div>
+                                                    <input class="mtext-104 cl3 txt-center num-product" type="number"
+                                                        name="num-product" min="1" value="1">
+                                                    <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                                        <i class="fs-16 zmdi zmdi-plus"></i>
+                                                    </div>
+                                                </div>
+                                                <button type="button"          
+                                                    class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04"
+                                                    onclick="return clickAddCart({{ $product->id }},{{ $product->product_quantity }})"
+                                                    >
+                                                    Thêm sản phẩm 
+                                                </button>
+                                            @endif
+                                            
                                     </div>
                                 </div>
                             @endif
@@ -167,10 +196,25 @@
                         <!--  -->
                         <div class="flex-w flex-m p-l-100 p-t-40 respon7">
                             <div class="flex-m bor9 p-r-10 m-r-11">
-                                <a href="#"
-                                    class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                                    data-tooltip="Add to Wishlist">
-                                    <i class="zmdi zmdi-favorite"></i>
+                                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" onclick="btn_addheart({{ $product->id }},'{{ $product->name }}',{{ !empty(session('user_customer_id')) ? session('user_customer_id') : 0  }}); return false;">
+                                    <img class="icon-heart1 dis-block trans-04" id="heart1_{{ $product->id }}" style="opacity: 1;" src="/template/images/icons/icon-heart-01.png"
+                                    alt="ICON">
+                                    @php
+                                        $html ='<img class="icon-heart2 dis-block trans-04 ab-t-l" id="heart2_'.$product->id.'"';
+                                        if(!empty(session('user_customer_id'))){
+                                            foreach ($product->favourite as $key => $item) {
+                                                # code...
+                                                if ($product->id == $item->product_id && session('user_customer_id') == $item->user_customer_id) {
+                                                    # code...
+                                                    $html.='
+                                                        style="opacity:1"
+                                                    ';
+                                                }
+                                            }
+                                        }
+                                        $html .= 'src="/template/images/icons/icon-heart-02.png" alt="ICON">';
+                                        echo $html;
+                                    @endphp
                                 </a>
                             </div>
 
@@ -200,16 +244,11 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item p-b-10">
                             <a class="nav-link active" data-toggle="tab" href="#description"
-                                role="tab">Description</a>
+                                role="tab">Thông tin sản phẩm</a>
                         </li>
 
                         <li class="nav-item p-b-10">
-                            <a class="nav-link" data-toggle="tab" href="#information" role="tab">Additional
-                                information</a>
-                        </li>
-
-                        <li class="nav-item p-b-10">
-                            <a class="nav-link" data-toggle="tab" href="#reviews" role="tab">Reviews (1)</a>
+                            <a class="nav-link" data-toggle="tab" href="#reviews" role="tab">Đánh giá ({{ count($comment) }})</a>
                         </li>
                     </ul>
 
@@ -238,45 +277,10 @@
                             <div class="row">
                                 <div class="col-sm-10 col-md-8 col-lg-6 m-lr-auto">
                                     <div class="p-b-30 m-lr-15-sm">
-                                        <!-- Review -->
-                                        <div class="flex-w flex-t p-b-68">
-                                            <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-                                                <img src="images/avatar-01.jpg" alt="AVATAR">
-                                            </div>
-
-                                            <div class="size-207">
-                                                <div class="flex-w flex-sb-m p-b-17">
-                                                    <span class="mtext-107 cl2 p-r-20">
-                                                        Ariana Grande
-                                                    </span>
-
-                                                    <span class="fs-18 cl11">
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star-half"></i>
-                                                    </span>
-                                                </div>
-
-                                                <p class="stext-102 cl6">
-                                                    Quod autem in homine praestantissimum atque optimum est, id deseruit.
-                                                    Apud ceteros autem philosophos
-                                                </p>
-                                            </div>
-                                        </div>
-
                                         <!-- Add review -->
-                                        <form class="w-full">
-                                            <h5 class="mtext-108 cl2 p-b-7">
-                                                Add a review
-                                            </h5>
-
-                                            <p class="stext-102 cl6">
-                                                Your email address will not be published. Required fields are marked *
-                                            </p>
-
-                                            <div class="flex-w flex-m p-t-50 p-b-23">
+                                        <form class="w-full" style="margin-bottom: 50px;">
+                                            {{-- point rating --}}
+                                            {{-- <div class="flex-w flex-m p-t-50 p-b-23">
                                                 <span class="stext-102 cl3 m-r-16">
                                                     Your Rating
                                                 </span>
@@ -289,15 +293,15 @@
                                                     <i class="item-rating pointer zmdi zmdi-star-outline"></i>
                                                     <input class="dis-none" type="number" name="rating">
                                                 </span>
-                                            </div>
-
+                                            </div> --}}
+                                            <h4>Bình luận</h4>
+                                            <p>Thời gian phản hồi 5 phút</p>
                                             <div class="row p-b-25">
                                                 <div class="col-12 p-b-5">
-                                                    <label class="stext-102 cl3" for="review">Your review</label>
-                                                    <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="review"></textarea>
+                                                    <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="review" placeholder="Nhập nội dung bình luận"></textarea>
                                                 </div>
 
-                                                <div class="col-sm-6 p-b-5">
+                                                {{-- <div class="col-sm-6 p-b-5">
                                                     <label class="stext-102 cl3" for="name">Name</label>
                                                     <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="name"
                                                         type="text" name="name">
@@ -307,14 +311,46 @@
                                                     <label class="stext-102 cl3" for="email">Email</label>
                                                     <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="email"
                                                         type="text" name="email">
-                                                </div>
+                                                </div> --}}
                                             </div>
 
-                                            <button
-                                                class="flex-c-m stext-101 cl0 size-112 bg7 bor11 hov-btn3 p-lr-15 trans-04 m-b-10">
-                                                Submit
+                                            <button type="button" class="btn btn-primary btn_binhluan" data-id="{{ $product->id }}" >
+                                                <i class="fa-solid fa-paper-plane" style="color: white;"></i>
+                                                Gửi bình luận
                                             </button>
                                         </form>
+                                        <!-- Review -->
+                                        @foreach ($comment as $item)
+                                            <div class="flex-w flex-t p-b-20 show_comment" style="margin-bottom: 5px">
+                                                <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
+                                                    <img class="img_user" src="{{ asset('storage/avatar-khach-hang-2-52544.png') }}" alt="AVATAR">
+                                                </div>
+                                                <div class="size-207">
+                                                    <div class="flex-w flex-sb-m " style="margin-bottom: 5px;">
+                                                        <span class="mtext-107 cl2 p-r-20" style="font-size: 16px;">
+                                                            @php
+                                                                preg_match('~\d+~',$item->UserCustomer->user_customer_email,$matches);
+                                                                echo str_replace($matches,'***',$item->UserCustomer->user_customer_email)
+                                                            @endphp
+                                                        </span>
+                                                        
+                                                        {{-- <span class="fs-18 cl11">
+                                                            <i class="zmdi zmdi-star"></i>
+                                                            <i class="zmdi zmdi-star"></i>
+                                                            <i class="zmdi zmdi-star"></i>
+                                                            <i class="zmdi zmdi-star"></i>
+                                                            <i class="zmdi zmdi-star-half"></i>
+                                                        </span> --}}
+                                                    </div>
+                                                    <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;">
+                                                        Bình luận vào {{ $item->created_at }}
+                                                    </div>
+                                                    <div class="stext-102 cl6" style="font-size: 16px; color:black;">
+                                                        {{ $item->comment_content }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -353,7 +389,8 @@
                             <!-- Block2 -->
                             <div class="block2">
                                 <div class="block2-pic hov-img0">
-                                    <img src="{{ $p->thumb }}" alt="IMG-PRODUCT">
+                                    <img style="height: 180px;
+                                    object-fit: contain;" src="{{ $p->thumb }}" alt="IMG-PRODUCT">
                                 </div>
 
                                 <div class="block2-txt flex-w flex-t p-t-14">
@@ -364,16 +401,47 @@
                                         </a>
 
                                         <span class="stext-105 cl3">
-                                            {!! App\Helpers\Helper::price($p->price, $p->price_sale) !!}
+                                            @if (!empty($p->tbl_price_dicount) && date("Y/m/d") !== str_replace('-','/',$p->tbl_price_dicount->end_at))
+                                                @php
+                                                $price = $p->price;
+                                                $percent = $p->tbl_price_dicount->percent_price/100;
+                                                $discount = $price * $percent;
+                                                $total = $price - $discount;
+                                                @endphp
+                                            <div style="font-weight: 600; margin-left: 5px;">{{ number_format($total)}}đ</div>
+                                            <div style="display: flex; align-items: center;">
+                                                <div style="font-weight: 600; margin-left: 5px; text-decoration-line: line-through; color: #9ca3af;">{{ number_format($p->price) }}đ</div>
+                                                <div style="margin-left: 5px; background-color: #dc3545;border-radius: 7px">
+                                                    <small style="color: white; font-weight: 600;
+                                                                padding: 5px 5px 0px 6px;">-{{ $p->tbl_price_dicount->percent_price }}%</small>
+                                                </div>
+                                            </div>
+                                            @else
+                                                <div style="font-weight: 600; margin-left: 5px;"> {!! App\Helpers\Helper::price($p->price) !!}đ</div>
+                                            @endif
                                         </span>
                                     </div>
 
-                                    <div class="block2-txt-child2 flex-r p-t-3">
-                                        <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-                                            <img class="icon-heart1 dis-block trans-04"
-                                                src="/template/images/icons/icon-heart-01.png" alt="ICON">
-                                            <img class="icon-heart2 dis-block trans-04 ab-t-l"
-                                                src="/template/icons/icon-heart-02.png" alt="ICON">
+                                    <div class=" flex-r p-t-3">
+                                        <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" onclick="btn_addheart({{ $product->id }},'{{ $product->name }}',{{ !empty(session('user_customer_id')) ? session('user_customer_id') : 0  }}); return false;">
+                                            <img class="icon-heart1 dis-block trans-04" id="heart1_{{ $product->id }}" style="opacity: 1;" src="/template/images/icons/icon-heart-01.png"
+                                            alt="ICON">
+                                            @php
+                                                $html ='<img class="icon-heart2 dis-block trans-04 ab-t-l" id="heart2_'.$product->id.'"';
+                                                if(!empty(session('user_customer_id'))){
+                                                    foreach ($product->favourite as $key => $item) {
+                                                        # code...
+                                                        if ($product->id == $item->product_id && session('user_customer_id') == $item->user_customer_id) {
+                                                            # code...
+                                                            $html.='
+                                                                style="opacity:1"
+                                                            ';
+                                                        }
+                                                    }
+                                                }
+                                                $html .= 'src="/template/images/icons/icon-heart-02.png" alt="ICON">';
+                                                echo $html;
+                                            @endphp
                                         </a>
                                     </div>
                                 </div>
@@ -529,14 +597,29 @@
                             <!--  -->
                             <div class="flex-w flex-m p-l-100 p-t-40 respon7">
                                 <div class="flex-m bor9 p-r-10 m-r-11">
-                                    <a href="#"
-                                        class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                                        data-tooltip="Add to Wishlist">
-                                        <i class="zmdi zmdi-favorite"></i>
+                                    <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" onclick="btn_addheart({{ $product->id }},'{{ $product->name }}',{{ !empty(session('user_customer_id')) ? session('user_customer_id') : 0  }}); return false;">
+                                        <img class="icon-heart1 dis-block trans-04" id="heart1_{{ $product->id }}" style="opacity: 1;" src="/template/images/icons/icon-heart-01.png"
+                                        alt="ICON">
+                                        @php
+                                            $html ='<img class="icon-heart2 dis-block trans-04 ab-t-l" id="heart2_'.$product->id.'"';
+                                            if(!empty(session('user_customer_id'))){
+                                                foreach ($product->favourite as $key => $item) {
+                                                    # code...
+                                                    if ($product->id == $item->product_id && session('user_customer_id') == $item->user_customer_id) {
+                                                        # code...
+                                                        $html.='
+                                                            style="opacity:1"
+                                                        ';
+                                                    }
+                                                }
+                                            }
+                                            $html .= 'src="/template/images/icons/icon-heart-02.png" alt="ICON">';
+                                            echo $html;
+                                        @endphp
                                     </a>
                                 </div>
 
-                                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                                {{-- <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
                                     data-tooltip="Facebook">
                                     <i class="fa fa-facebook"></i>
                                 </a>
@@ -549,7 +632,7 @@
                                 <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
                                     data-tooltip="Google Plus">
                                     <i class="fa fa-google-plus"></i>
-                                </a>
+                                </a> --}}
                             </div>
                         </div>
                     </div>
@@ -557,4 +640,68 @@
             </div>
         </div>
     </div>
+@endsection
+@section('js')
+    <script>
+        $('.btn_binhluan').on('click',function() {
+            var comment = $('#review').val();
+            var id = $(this).data('id');
+            $.ajax({
+                url:"{{ route('commentProduct') }}",
+                type:"POST",
+                data:{
+                    _token:"{{ csrf_token() }}",
+                    id:id,
+                    comment:comment,
+                },
+                success:function(response){
+                    if(response){
+                        window.location.reload();
+                    }else{
+                        window.location.replace('http://shopbanhang.com/dang-nhap');
+                    }
+                }
+            });
+        });
+        
+        function clickAddCart(id,sl){
+            var quantity = $('.num-product').val();
+            // $(':disabled').css("display","none");
+            if(quantity <= sl){
+                $.ajax({
+                    url:"{{ route('addtoCart') }}",
+                    type:"POST",
+                    data:{
+                        _token:"{{ csrf_token() }}",
+                        id:id,
+                        quantity:quantity,
+                    },
+                    success:function(response) {
+                        swal({
+                                title: "Đã thêm sản phẩm vào giỏ hàng",
+                                text: "Bạn có thể mua hàng tiếp hoặc đến giỏ hàng để thanh toán",
+                                icon: "success",
+                                buttons:["Xem tiếp","Đến trang giỏ hàng"],
+                                // dangerMode: true,
+                            })
+                            .then((e) => {
+                                if (e) {
+                                    window.location.href =  "{{ route('showCart') }}"
+                                }else{
+                                    window.location.reload();
+                                }
+                            });
+                    }
+                });
+            }else{
+                swal({
+                    title: "Vui lòng kiểm tra",
+                    text: "Số lượng sản phẩm khách hàng đặt vượt quá số lượng tồn !",
+                    icon: "warning",
+                    buttons: 'Ok',
+                })
+            }
+        }
+	
+    </script>
 @endsection

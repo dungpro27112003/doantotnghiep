@@ -8,10 +8,9 @@
 </head>
 
 <body><!-- class="animsition" -->
-
+    
     <!-- Header -->
     @include('layout.header')
-
     <!-- Cart -->
     {{-- @include('layout.cart') --}}
 
@@ -21,6 +20,7 @@
 
     <!-- Footer -->
     @include('layout.footer')
+    @yield('js')
 
 </body>
 

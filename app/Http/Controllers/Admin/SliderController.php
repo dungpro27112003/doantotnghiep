@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Services\Slider\SliderService;
+use App\Models\Product;
 use App\Models\Slider;
 
 class SliderController extends Controller
@@ -17,8 +18,10 @@ class SliderController extends Controller
     }
 
     public function create(){
+        $product = Product::all();
         return view('admin.slider.add',[
-            'title'=>'Thêm Silder mới'
+            'title'=>'Thêm Silder mới',
+            'product'=>$product,
         ]);
     }
 
@@ -26,7 +29,6 @@ class SliderController extends Controller
         $this->validate($request,[
             'name'=>'required',
             'thumb'=>'required',
-            'url'=>'required',
         ]);
 
         $this->slider->insert($request);
@@ -52,7 +54,6 @@ class SliderController extends Controller
         $this->validate($request,[
             'name'=>'required',
             'thumb'=>'required',
-            'url'=>'required',
         ]);
         $result = $this->slider->update($request,$slider);
 

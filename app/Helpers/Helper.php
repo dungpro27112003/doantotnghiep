@@ -23,7 +23,7 @@ class Helper
                         <td>&nbsp;</td>
                         <td>
                             <a class="btn btn-primary btn-sm" href="/admin/menus/edit/'.$menu->id.'"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a href="#" class="btn btn-danger btn-sm" onclick="removeRow('.$menu->id.',\'/admin/menus/destroy\')"><i class="fa-solid fa-xmark"></i></a>
+                            <a href="#" class="btn btn-danger btn-sm btn_delete" data-id="'.$menu->id.'")"><i class="fa-solid fa-xmark"></i></a>
                         </td>
                     </tr>
                 ';
@@ -50,15 +50,14 @@ class Helper
                             '.$menu->name.'
                         </a>';
 
-            unset($menu[$key]);
-                       
-            if(self::isChild($menus,$menu->id)){
-                $html .='<ul class="sub-menu">';
-                $html .= self::menus($menus,$menu->id);
-                $html .= '</ul>';
-            }
-                $html .='</li>
-                ';
+                unset($menu[$key]);
+
+                if(self::isChild($menus,$menu->id)){
+                    $html .='<ul class="sub-menu">';
+                    $html .= self::menus($menus,$menu->id);
+                    $html .= '</ul>';
+                }
+                $html .='</li>';
             }
         }
         return $html;
@@ -75,7 +74,7 @@ class Helper
     public static function price($price=0,$pricesale=0)
     {
         if($price !=0) return number_format($price).'đ';
-        if($pricesale !=0) return number_format($pricesale).'đ';    
+        // if($pricesale !=0) return number_format($pricesale).'đ';    
         return '<a href="/lien-he.html">Liên hệ</a>';
     }
 }

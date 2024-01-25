@@ -3,31 +3,31 @@
         <div class="row">
             <div class="col-sm-6 col-lg-3 p-b-50">
                 <h4 class="stext-301 cl0 p-b-30">
-                    Thể loại
+                    Danh mục
                 </h4>
 
                 <ul>
                     <li class="p-b-10">
                         <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-                            Women
+                            Tablet
                         </a>
                     </li>
 
                     <li class="p-b-10">
                         <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-                            Men
+                            Tai nghe
                         </a>
                     </li>
 
                     <li class="p-b-10">
                         <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-                            Shoes
+                            Laptop
                         </a>
                     </li>
 
                     <li class="p-b-10">
                         <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-                            Watches
+                            Bàn phím
                         </a>
                     </li>
                 </ul>
@@ -35,31 +35,31 @@
 
             <div class="col-sm-6 col-lg-3 p-b-50">
                 <h4 class="stext-301 cl0 p-b-30">
-                    Hỗ trợ
+                    Danh mục
                 </h4>
 
                 <ul>
                     <li class="p-b-10">
                         <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-                            Track Order
+                            Màn hình
                         </a>
                     </li>
 
                     <li class="p-b-10">
                         <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-                            Returns 
+                            Chuột
                         </a>
                     </li>
 
                     <li class="p-b-10">
                         <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-                            Shipping
+                            Đồng hồ
                         </a>
                     </li>
 
                     <li class="p-b-10">
                         <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-                            FAQs
+                            Điện thoại
                         </a>
                     </li>
                 </ul>
@@ -71,7 +71,10 @@
                 </h4>
 
                 <p class="stext-107 cl7 size-201">
-                    Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
+                    Khiếu nại: 1800.1062 (8:00 - 21:30)
+                </p>
+                <p class="stext-107 cl7 size-201">
+                    Bảo hành: 1800.1064 (8:00 - 21:30)
                 </p>
 
                 <div class="p-t-27">
@@ -110,7 +113,7 @@
         </div>
 
         <div class="p-t-40">
-            <div class="flex-c-m flex-w p-b-18">
+            {{-- <div class="flex-c-m flex-w p-b-18">
                 <a href="#" class="m-all-1">
                     <img src="images/icons/icon-pay-01.png" alt="ICON-PAY">
                 </a>
@@ -130,7 +133,7 @@
                 <a href="#" class="m-all-1">
                     <img src="images/icons/icon-pay-05.png" alt="ICON-PAY">
                 </a>
-            </div>
+            </div> --}}
 
             <p class="stext-107 cl6 txt-center">
                 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
@@ -169,7 +172,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
                             <div class="slick3 gallery-lb">
                                 <div class="item-slick3" data-thumb="images/product-detail-01.jpg">
-                                    <div class="wrap-pic-w pos-relative">
+                                    <div class="wrap-pic-w pos-reremoveRowlative">
                                         <img src="images/product-detail-01.jpg" alt="IMG-PRODUCT">
 
                                         <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04" href="images/product-detail-01.jpg">
@@ -345,36 +348,79 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             mainClass: 'mfp-fade'
         });
     });
+   
 </script>
+
 <!--===============================================================================================-->
 <script src="/template/vendor/isotope/isotope.pkgd.min.js"></script>
 <!--===============================================================================================-->
 <script src="/template/vendor/sweetalert/sweetalert.min.js"></script>
 <script>
-    $('.js-addwish-b2').on('click', function(e){
-        e.preventDefault();
-    });
+    function btn_fillterProduct(id){
+        $.ajax({
+            url:"{{ route('loadProductFillter') }}",
+            type:"POST",
+            data:{
+                _token:"{{ csrf_token() }}",
+                id,
+            },
+            success:function(response){
+                if(response != null){
+                    $('.show_ProductFilter').html(response);
+                }
+            }
+        })
+    }
+    function btn_addheart(id,name,user){
+        if(user != 0){
+            $.ajax({
+                url:"{{ route('favouriteProduct') }}",
+                type:"POST",
+                data:{
+                    _token:"{{ csrf_token() }}",
+                    id:id,
+                    user:user,
+                },
+                success:function(response) {
+                    if(response == 0){
+                        $('#heart1_'+id).attr('style','opacity:0 ');
+                        $('#heart2_'+id).attr('style','opacity:1 !important');
+                        swal(name, "đã thêm vào danh sách yêu thích !", "success");
+                    }else if(response == 1){
+                        $('#heart1_'+id).attr('style','opacity:1 ');
+                        $('#heart2_'+id).attr('style','opacity:0 !important');
+                    }else{
+                        window.location ='http://shopbanhang.com/dang-nhap';
+                    }
+                }
 
-    $('.js-addwish-b2').each(function(){
-        var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
-        $(this).on('click', function(){
-            swal(nameProduct, "is added to wishlist !", "success");
+            })
+        }else{
+            window.location ='http://shopbanhang.com/dang-nhap';
+        }
+    }
 
-            $(this).addClass('js-addedwish-b2');
-            $(this).off('click');
-        });
-    });
 
-    $('.js-addwish-detail').each(function(){
-        var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+    // $('.js-addwish-b2').each(function(){
+    //     var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+    //     $(this).on('click', function(){
+    //         swal(nameProduct, "is added to wishlist !", "success");
 
-        $(this).on('click', function(){
-            swal(nameProduct, "is added to wishlist !", "success");
+    //         $(this).addClass('js-addedwish-b2');
+    //         $(this).off('click');
+    //     });
+    // });
 
-            $(this).addClass('js-addedwish-detail');
-            $(this).off('click');
-        });
-    });
+    // $('.js-addwish-detail').each(function(){
+    //     var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+    //     $(this).on('click', function(){
+    //         swal(nameProduct, "is added to wishlist !", "success");
+
+    //         $(this).addClass('js-addedwish-detail');
+    //         $(this).off('click');
+    //     });
+    // });
 
     /*---------------------------------------------*/
 
@@ -406,3 +452,18 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!--===============================================================================================-->
 <script src="/template/js/main.js"></script>
 <script src="/template/js/public.js"></script>
+<script>
+    function clickDeleteCart(id){
+        $.ajax({
+            url:"{{ route('deleteCart') }}",
+            type:"post",
+            data:{
+                _token:"{{ csrf_token() }}",
+                id,
+            },
+            success:function(response) {
+                window.location.reload();
+            }
+        })
+    }
+</script>

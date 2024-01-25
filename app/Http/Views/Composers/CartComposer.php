@@ -23,7 +23,7 @@ class CartComposer{
             return [];
         }
         $productID =array_keys($carts);
-        $products = Product::select('id','name','price','price_sale','thumb')
+        $products = Product::select('id','name','price','thumb')
         ->where('active',1)
         ->whereIn('id',$productID)
         ->get();

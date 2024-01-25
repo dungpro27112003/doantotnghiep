@@ -14,8 +14,13 @@ class SliderService extends Controller
     public function insert($request)
     {
         try {
-            #$request->except('_token');
-            Slider::create($request->input());
+            $slide= new Slider();
+            $slide->name = $request->name;
+            $slide->thumb = $request->thumb;
+            $slide->active = $request->active;
+            $slide->product_id = $request->slc_product;
+            $slide->save();
+
             Session::flash('success', 'Thêm slider mới thành công');
         } catch (Exception $err) {
             Session::flash('error', 'Thêm slider lỗi');
@@ -58,6 +63,6 @@ class SliderService extends Controller
     }
 
     public function show(){
-        return Slider::where('active',1)->orderBydesc('sort_by')->get();
+        return Slider::with('product')->where('active',1)->inRandomOrder()->limit(3)->get();
     }
 }

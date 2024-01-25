@@ -3,14 +3,15 @@
     <script src="/ckeditor/ckeditor.js"></script>
 @endsection
 @section('content')
-    <form action="" method="post">
+    <form action="{{ URL::current() }}" method="post" enctype="multipart/form-data">
+        @csrf
         <div class="card-body">
             <div class="form-group">
                 <label for="menu">Tên danh mục</label>
                 <input type="text" name="name" class="form-control" placeholder="Nhập tên danh mục">
             </div>
 
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label>Danh mục</label>
                 <select name="parent_id" class="form-control">
                     <option value="0">Danh mục cha</option>
@@ -18,7 +19,7 @@
                         <option value="{{$menu->id}}">{{$menu->name}}</option>
                     @endforeach
                 </select>
-            </div>
+            </div> --}}
 
             <div class="form-group">
                 <label>Mô tả</label>
@@ -28,6 +29,12 @@
             <div class="form-group">
                 <label>Mô tả chi tiết</label>
                 <textarea name="content" id="content" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Hình ảnh</label>
+                <div class="form-control" style="padding: 3px 2px;">
+                    <input type="file" name="image" id="">
+                </div>
             </div>
 
             <div class="form-group">

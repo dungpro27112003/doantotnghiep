@@ -19,50 +19,74 @@ class MenuService
     }
 
     public function show(){
-        return Menu::select('name','id')
-        //->where('parent_id',0)
-        ->orderbyDesc('id')
+        return Menu::orderbyDesc('id')
         ->get();
     }
 
     public function create($request){
         try{
-            Menu::create([
-                'name' =>(string)$request->input('name'),
+            $data = new Menu();
+            $data->name = (string)$request->input('name');
                 // 'parent_id' =>(int)$request->input('parent_id'),
-                'description' =>(string)$request->input('description'),
-                'content' =>(string)$request->input('content'),
-                'active' =>(string)$request->input('active'),
-            ]);
+            $data->description = (string)$request->input('description');
+            $data->content = (string)$request->input('content');
+            $data->active =(string)$request->input('active');
+            $link = $request->image;
+            if($link != null){
+                $realPath = $link->getRealPath();
+                $name = $link->getClientOriginalName();
+                $newName = current(explode('.',$name));
+                $pathFull = 'storage/upload/'.$newName.'-'.date('Y-m-d').'.'.$link->getClientOriginalExtension();
+                move_uploaded_file($realPath,$pathFull);
+                $data->menu_image = $pathFull;
+            }
+            $data->save();
             Session::flash('success','Tạo thành công');
         }catch(Exception $err){
             Session::flash('error',$err->getMessage());
-            return false;
         }
         return true;
     }
     public function destroy($request){
-        $id = (int)$request->input('id');
+        $id = $request->id;
 
         $menu = Menu::where('id',$id)->first();
         if($menu){
-            return Menu::where('id',$id)->orWhere('parent_id',$id)->delete();
+            if(file_exists($menu->menu_image)){
+                unlink($menu->menu_image);
+            }
+            return Menu::where('id',$id)->delete();
         }
         return false;
     }
-    public function update($menu,$request):bool
+    public function update($menu,$request)
     {
-        if($request->input('parent_id')!=$menu->id){
-            $menu->parent_id = (int)$request->input('parent_id');
+        // if($request->input('parent_id')!=$menu->id){
+        //     $menu->parent_id = (int)$request->input('parent_id');
+        // }
+        $data = Menu::find($menu);
+        if($data){
+            $data->name = $request->name;
+            $data->description = $request->description;
+            $data->content = $request->content;
+            $link = $request->image;
+            if($link != null){
+                $realPath = $link->getRealPath();
+                $name = $link->getClientOriginalName();
+                $newName = current(explode('.',$name));
+                if(file_exists($data->menu_image)){
+                    unlink($data->menu_image);
+                }
+                $pathFull = 'storage/upload/'.$newName.'-'.date('Y-m-d').'.'.$link->getClientOriginalExtension();
+                move_uploaded_file($realPath,$pathFull);
+                $data->menu_image = $pathFull;
+            }
+            $data->active = $request->active;
+            $data->save();
+            return true;
         }
-
-        $menu->name = (string)$request->input('name');
-        $menu->description = (string)$request->input('description');
-        $menu->content = (string)$request->input('content');
-        $menu->active = (string)$request->input('active');
-        $menu->save();
-        Session::flash('success','Cập nhật thành công');
-        return true;
+        return false;
+        
     }
 
     public function getID($id){
@@ -71,7 +95,6 @@ class MenuService
     
     public function getProduct($menu,$request){
         $query = $menu->products()
-        ->select('id','name','price','price_sale','thumb')
         ->where('active',1);
         
         $searchKeyword = $request->input('search');
